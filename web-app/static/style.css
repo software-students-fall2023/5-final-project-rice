@@ -1,0 +1,92 @@
+@font-face {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/robotomono/v22/L0xuDF4xlVMF-BfR8bXMIhJHg45mwgGEFl0_gPq_ROW4AJi8SJQt.woff2) format('woff2');
+}
+
+body {
+    background-color: #71a7e0; 
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    font-family: 'Roboto Mono', monospace;
+}
+.header {
+    background-color: #ffffff;
+    max-width: 600px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.container {
+    background-color: #ffffff;
+    max-width: 1200px;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.buttonContainer{
+    font-family: 'Roboto Mono', monospace;
+    text-align: center;
+    margin-top: 32px;
+}
+
+.button{
+    font-size: 12px;
+    background-color: lightsteelblue;
+    
+}
+
+.about {
+    background-color: #ffffff;
+    max-width: 800px;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 10px auto;
+}
+
+h1, h2, h3{
+    text-align: center;
+}
+
+.status-Message {
+    text-align: center;
+    font-size: 24px;
+}
+
+.BaseNav{
+    background-color: #71a7e0;
+    color:black;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    
+}
+
+a {
+    text-decoration: none; 
+    color: inherit; 
+}
+
+p{
+    font-size: 20px;
+    text-align: center;
+}
+
+li{
+    font-size: 21px;
+}
+
+
