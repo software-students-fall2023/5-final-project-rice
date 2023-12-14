@@ -1,83 +1,90 @@
-"""
-app.py file that helps serve as the front end of our application
-"""
 
+from flask import Flask, render_template, request, redirect, url_for, make_response, session
 import os
-from flask import Flask, render_template, request, jsonify
 from pymongo import MongoClient
-import requests
-
-app = Flask(__name__, template_folder="templates")
-
-# Connect to MongoDB
-client = MongoClient("mongodb://mongodb:27017/")
-db = client["ml_database"]
-collection = db["transcription"]
+from bson.objectid import ObjectId
+import bcrypt
 
 
-@app.route("/test_render_template")
-def test_render_template():
-    """
-    Request received for /test_render_template
-    """
-    print("Request received for /test_render_template")
-    return render_template("root.html")
 
+app = Flask('Trader')
+app.secret_key = 'pass'
 
-@app.route("/")
-def root_page():
-    """
-    Template to render root page
-    """
-    return render_template("root.html")
+client = MongoClient("mongodb://localhost:27017/")
+db = client["trade_database"]
 
+@app.route('/Trade')
+def RootPage():
+    return render_template('rootpage.html')
 
-@app.route("/results")
-def display_results():
-    """
-    Function to render the results page for a specific audio analysis
-    """
-    my_transcript = collection.find_one(sort=[("_id", -1)])
+@app.route('/', methods=['GET', 'POST'])
+def LoginPage():
+    if (request.method == 'GET'):
+        return render_template('login.html')
+    else:
+        username = request.form['fname']
+        password = request.form['fpwd']
 
-    if not my_transcript:
-        return jsonify({"error": "Result not found"}), 404
-
-    return render_template(
-        "results.html", transcription_result=my_transcript, activePage="results.html"
-    )
-
-
-@app.route("/analyzeData", methods=["POST"])
-def analyze_data():
-    """
-    Function to send generated audio file to the machine learning client
-    """
-    try:
-        if "audio" not in request.files:
-            return jsonify({"status": "error", "message": "No audio file provided"})
-
-        audio_file = request.files["audio"]
-        ml_client_url = "http://backend:5001/analyzeAudio"
-        # Use the converted audio file
-        response = requests.post(
-            ml_client_url, files={"audio": audio_file}, timeout=100
-        )
-        print("sent over")
-
-        # pylint: disable=R1705
-        if response.status_code == 200:
-            result = response.json()
-            return jsonify(result)
+        if authenticate_user(username, password):
+            # Authentication successful
+            session['logged_in'] = True
+            session['username'] = username
+            return redirect(url_for('RootPage'))
         else:
-            return (
-                jsonify(
-                    {"error": "Failed to send and process audio. Please try again."}
-                ),
-                500,
-            )
-    except FileNotFoundError as e:
-        return jsonify({"status": "error", "message": f"File not found: {str(e)}"})
+            error = "Login Failed: Invalid username or password."
+            return render_template('login.html', error=error)
+    
+@app.route('/register', methods=['GET', 'POST'])
+def RegisterPage():
+    if request.method == 'GET':
+        return render_template('register.html')
+    else:
+        name = request.form['fname']
+        pwd = request.form['fpwd']
+        email = request.form['femail']
+        phone = request.form['fnumber']
+        
+        if register_user(name, pwd, email, phone):
+            # Registration successful, print a message and redirect
+            print(f"User '{name}' registered successfully.")
+            return redirect(url_for('LoginPage'))
+        else:
+            # Registration failed, print an error message
+            print(f"Failed to register user '{name}'.")
+            error = 'Username already exist please create a new one'
+            return render_template('register.html', error=error)
 
+def register_user(username, password, email, phone):
+    try:
+        # check if user exist 
+        users = db['users']
+        ExistingUser = users.find_one({
+            "$or": [
+                {"username": username},
+                {"email": email},
+                {"phone": phone}
+            ]
+        })
+
+        if (ExistingUser):
+            return False
+        print(f"hi")
+        # Insert user data into the 'users' collection
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt(10))  # Set work factor to 10
+        user_data = {"username": username, "password": hashed_password, "email": email, "phone": phone}
+        users.insert_one(user_data)
+        print(f"User registered: {user_data}")
+        return True
+    except Exception as e:
+        print(f"Error during registration: {str(e)}")
+        return False
+
+def authenticate_user(username, password):
+    users = db['users']
+    user = users.find_one({"username": username})
+    if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
+        return True
+    return False
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True)

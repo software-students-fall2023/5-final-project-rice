@@ -7,14 +7,14 @@
 }
 
 body {
-    background-color: #71a7e0; 
+    background-color: #f3ccff;
     margin: 0;
     padding: 20px;
     line-height: 1.6;
     font-family: 'Roboto Mono', monospace;
 }
 .header {
-    background-color: #ffffff;
+    background-color: hsl(0, 0%, 100%);
     max-width: 600px;
     border-radius: 5px;
     padding: 10px;
@@ -29,20 +29,11 @@ body {
     padding: 20px;
     margin: 50px auto;
     text-align: center;
+    }
+form {
+    padding-left: 60px;
+    padding-right: 60px;
 }
-
-.buttonContainer{
-    font-family: 'Roboto Mono', monospace;
-    text-align: center;
-    margin-top: 32px;
-}
-
-.button{
-    font-size: 12px;
-    background-color: lightsteelblue;
-    
-}
-
 .about {
     background-color: #ffffff;
     max-width: 800px;
@@ -54,17 +45,70 @@ body {
     margin: 10px auto;
 }
 
+
+
+.add-food-form{
+    display: block;
+    text-align: center;
+    font-size: 1.2em;
+    font-family: 'Roboto Mono', monospace;
+    align-items: center;
+}
+
 h1, h2, h3{
     text-align: center;
 }
 
-.status-Message {
+.login-form{
+    display: block;
     text-align: center;
-    font-size: 24px;
+    font-size: 2em; 
+    font-family: 'Roboto Mono', monospace;
+    
+    
+}
+
+.login-input, .password-input, .phone-input, .email-input {
+    width: 350px;
+    height: 50px;
+    border-radius: 12px; /* Adjust the border-radius to make it more rounded */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 25px; 
+}
+
+.login-submit-button{
+    width: 150px;
+    height: 40px;
+    background-color:#FAF9F6;
+    color:black;
+    padding: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+.search-box {
+    padding: 10px;
+    border-radius: 6px;
+    width: 250px;
+    margin-right: 10px;
+}
+.search-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .BaseNav{
-    background-color: #71a7e0;
+    background-color: #4CAF50;
     color:black;
     border: none;
     text-align: center;
@@ -80,13 +124,22 @@ a {
     color: inherit; 
 }
 
-p{
-    font-size: 20px;
-    text-align: center;
+.food-trucks-container{
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 10px;
 }
 
-li{
-    font-size: 21px;
+.food-truck-divs{
+    border: 1px solid black;
+    border-radius: 13px;
+    padding: 10px;
+    margin-bottom: 10px;
 }
+
+.Edit_Delete_Buttons > button{
+    display: inline-block;
+}
+
 
 
