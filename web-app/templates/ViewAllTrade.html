@@ -10,6 +10,17 @@
     {% extends 'base.html' %} {% block Base %}
     <h1>All Items Available</h1>
 
+    <div class="container mt-4">
+        {% for item in all_items %}
+            <div class="card p-3 mb-3 text-center">
+                <img src="{{ url_for('get_image', itemId=item['_id']) }}" alt="{{ item.description }}" class="img-thumbnail mx-auto d-block" style="width: 200px; height: auto;">
+                <h4>Category:{{ item.category }}</h4>
+                <h4>Condition:{{ item.condition }}</h4> 
+                <h4>Price:{{ item.price }}</h4>
+            </div>
+        {% endfor %}
+    </div>
+
 
     {% endblock %}
     

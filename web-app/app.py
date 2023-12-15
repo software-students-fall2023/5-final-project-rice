@@ -1,8 +1,9 @@
 
-from flask import Flask, render_template, request, redirect, url_for, make_response, session
+from flask import Flask, render_template, request, redirect, url_for, make_response, session, send_file
 import os
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from bson.binary import Binary
 import bcrypt
 
 
@@ -21,6 +22,43 @@ def RootPage():
 def AddItemPage():
     return render_template('additem.html')
 
+@app.route('/AddItem', methods=['POST'])
+def AddItem():
+    if 'logged_in' not in session or not session['logged_in']:
+        return redirect(url_for('LoginPage'))
+    
+    if request.method == 'POST':
+        try:
+            itemImage = request.files['item_image']
+            category = request.form['category']
+            description = request.form['description']
+            condition = request.form['condition']
+            price = request.form['price']
+
+            imageData = Binary(itemImage.read())
+            items = db['items']
+
+            item_info = {
+                "category": category,
+                "description": description,
+                "condition": condition,
+                "price": price,
+                "image_data": imageData,  # Save the image data as Binary in the database
+                "user": session['username'],  # Include the username of the logged-in user
+                "user_email": session['user_email'],  # Include the email of the logged-in user
+                "user_phone": session['user_phone']  # Include the phone of the logged-in user
+            }
+            
+            items.insert_one(item_info)
+            print("item added successfuly")
+            return redirect(url_for('ViewAllTrade'))
+ 
+        except Exception as e:
+            print("unable to add item")
+            error = f"unable to add item: {str(e)}"
+            return render_template('additem.html', error=error)
+
+
 
 @app.route('/Profile')
 def ViewProfile():
@@ -29,7 +67,26 @@ def ViewProfile():
 
 @app.route('/ViewAllTrade')
 def ViewAllTrade():
-    return render_template('ViewAllTrade.html')
+    items_collection = db['items']
+    all_items = items_collection.find()
+    return render_template('ViewAllTrade.html', all_items=all_items)
+
+
+## way to access image to render for that specific entry
+@app.route('/images/<itemId>')
+def get_image(itemId):
+    items_collection = db['items']
+    get_item_image = items_collection.find_one({'_id': ObjectId(itemId)})
+
+    if get_item_image and 'image_data' in get_item_image:
+        response = make_response(get_item_image['image_data'])
+
+        # Specify multiple content types separated by a comma
+        response.headers['Content-Type'] = 'image/jpeg, image/png, image/gif'
+
+        return response
+
+    return 'Image not found', 404
 
 @app.route('/YourTrade')
 def ViewYourTrade():
@@ -49,9 +106,17 @@ def LoginPage():
 
         if authenticate_user(username, password):
             # Authentication successful
+            users = db['users']
+            userData = users.find_one({"username": username})
+
             session['logged_in'] = True
             session['username'] = username
+
+            session['user_email'] = userData.get('email', '')
+            session['user_phone'] = userData.get('phone', '')
+            
             return redirect(url_for('RootPage'))
+        
         else:
             error = "Login Failed: Invalid username or password."
             return render_template('login.html', error=error)
@@ -60,6 +125,7 @@ def LoginPage():
 def RegisterPage():
     if request.method == 'GET':
         return render_template('register.html')
+    
     else:
         name = request.form['fname']
         pwd = request.form['fpwd']
@@ -69,6 +135,12 @@ def RegisterPage():
         if register_user(name, pwd, email, phone):
             # Registration successful, print a message and redirect
             print(f"User '{name}' registered successfully.")
+
+            session['logged_in'] = True
+            session['username'] = name
+            session['user_email'] = email
+            session['user_phone'] = phone
+
             return redirect(url_for('LoginPage'))
         else:
             # Registration failed, print an error message
@@ -76,10 +148,14 @@ def RegisterPage():
             error = 'Username already exist please create a new one'
             return render_template('register.html', error=error)
         
+
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()  # Clear the session data
     return redirect(url_for('LoginPage'))
+
+
+#Thank you stackOver flow: https://stackoverflow.com/questions/11017466/flask-to-return-image-stored-in-database
 
 def register_user(username, password, email, phone):
     try:
