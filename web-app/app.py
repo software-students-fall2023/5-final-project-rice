@@ -21,12 +21,6 @@ def RootPage():
 def AddItemPage():
     return render_template('additem.html')
 
-
-@app.route('/Profile')
-def ViewProfile():
-    return render_template('profile.html')
-
-
 @app.route('/ViewAllTrade')
 def ViewAllTrade():
     return render_template('ViewAllTrade.html')
@@ -112,6 +106,29 @@ def authenticate_user(username, password):
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
         return True
     return False
+
+@app.route('/Profile', methods=['GET', 'POST'])
+def UserProfile():
+    if 'username' not in session:
+        return redirect(url_for('LoginPage'))
+
+    users = db['users']
+    current_user = session['username']
+    user_data = users.find_one({"username": current_user})
+
+    if request.method == 'POST':
+        new_username = request.form['username']
+        new_email = request.form['email']
+        new_phone = request.form['phone']
+
+        if new_username != current_user:
+            session['username'] = new_username
+
+        users.update_one({"username": current_user}, {"$set": {"username": new_username, "email": new_email, "phone": new_phone}})
+        return redirect(url_for('UserProfile'))
+
+    return render_template('profile.html', user=user_data)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True)
