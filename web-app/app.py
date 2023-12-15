@@ -17,6 +17,28 @@ db = client["trade_database"]
 def RootPage():
     return render_template('rootpage.html')
 
+@app.route('/AddItem')
+def AddItemPage():
+    return render_template('additem.html')
+
+
+@app.route('/Profile')
+def ViewProfile():
+    return render_template('profile.html')
+
+
+@app.route('/ViewAllTrade')
+def ViewAllTrade():
+    return render_template('ViewAllTrade.html')
+
+@app.route('/YourTrade')
+def ViewYourTrade():
+    return render_template('YourTrade.html')
+
+@app.route('/SearchForItem')
+def SearchForItem():
+    return render_template('SearchTrade.html')
+
 @app.route('/', methods=['GET', 'POST'])
 def LoginPage():
     if (request.method == 'GET'):
@@ -53,6 +75,11 @@ def RegisterPage():
             print(f"Failed to register user '{name}'.")
             error = 'Username already exist please create a new one'
             return render_template('register.html', error=error)
+        
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()  # Clear the session data
+    return redirect(url_for('LoginPage'))
 
 def register_user(username, password, email, phone):
     try:
