@@ -11,6 +11,13 @@
     {% extends 'base.html' %} {% block Base %}
     <h1>Search For Item</h1>
 
+    <div class="search-container">
+        <form method="get"> 
+            <input type="text" class="search-box" name="cuisine" placeholder="Search for Cuisine" required>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+
 
     {% endblock %}
     

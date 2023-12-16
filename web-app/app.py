@@ -58,20 +58,50 @@ def AddItem():
             error = f"unable to add item: {str(e)}"
             return render_template('additem.html', error=error)
 
-
-
-@app.route('/Profile')
-def ViewProfile():
-    return render_template('profile.html')
-
-
 @app.route('/ViewAllTrade')
 def ViewAllTrade():
+    get_current_user = session.get('username', '')
     items_collection = db['items']
-    all_items = items_collection.find()
+    all_items = items_collection.find({'user': {'$ne': get_current_user}})
     return render_template('ViewAllTrade.html', all_items=all_items)
 
+@app.route('/ViewItemDetail/<itemId>')
+def ViewItemDetail(itemId):
+ 
+    items_collection = db['items']
+    get_Individual_item = items_collection.find_one({"_id": ObjectId(itemId)})
 
+    return render_template('ViewItemDetail.html', get_Individual_item=get_Individual_item)
+
+@app.route('/YourTrade')
+def YourTrade():
+    if 'username' not in session:
+        return redirect(url_for('LoginPage'))
+
+    get_current_user = session.get('username', '')
+    items_collection = db['items']
+    get_my_item = items_collection.find({'user': get_current_user})
+    return render_template('YourTrade.html', get_my_item=get_my_item )
+
+@app.route('/YourItemDetail/<itemId>')
+def YourItemDetail(itemId):
+ 
+    items_collection = db['items']
+    get_your_item = items_collection.find_one({"_id": ObjectId(itemId)})
+
+    return render_template('YourItemDetail.html', get_your_item=get_your_item)
+
+
+@app.route('/DeleteItem/<itemId>', methods=['POST'])
+def DeleteItem(itemId):
+    return
+
+@app.route('/EditItem/<itemId>', methods=['GET'])
+def EditItem(itemId):
+    return
+
+
+## Thank you stackOver flow: https://stackoverflow.com/questions/11017466/flask-to-return-image-stored-in-database
 ## way to access image to render for that specific entry
 @app.route('/images/<itemId>')
 def get_image(itemId):
@@ -88,9 +118,6 @@ def get_image(itemId):
 
     return 'Image not found', 404
 
-@app.route('/YourTrade')
-def ViewYourTrade():
-    return render_template('YourTrade.html')
 
 @app.route('/SearchForItem')
 def SearchForItem():
@@ -154,8 +181,6 @@ def logout():
     session.clear()  # Clear the session data
     return redirect(url_for('LoginPage'))
 
-
-#Thank you stackOver flow: https://stackoverflow.com/questions/11017466/flask-to-return-image-stored-in-database
 
 def register_user(username, password, email, phone):
     try:
