@@ -6,7 +6,19 @@
     <title>StreetEats</title>
     <link rel="stylesheet" href="/static/style.css">
     <style>
-        
+        .register-submit-button {
+            padding: 10px 15px;
+            background-color: #dcb6f6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-submit-button:hover {
+            background-color: #b37af5; 
+        }
     </style>
 </head>
 <body>
@@ -27,7 +39,7 @@
                     <input type="text" name="fpwd" class="password-input" required/><br>
                     <label for="fnumber"> Phone Number: </label><br>
                     <input type="text" name="fnumber" class="phone-input" required/><br>
-                    <input type="submit" value = Register class="login-submit-button"/>
+                    <input type="submit" value = Register class="register-submit-button"/>
                     
                 </form>
                     <a href="/">have an account? Log in here here.</a>
