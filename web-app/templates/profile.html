@@ -1,16 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Profile</title>
     <link rel="stylesheet" href="/static/style.css">
-    <title>Profle</title>
 </head>
 <body>
     {% extends 'base.html' %} {% block Base %}
-    <h1>Your Profile</h1>
+    <header>
+        <h1>User Profile</h1>
+        {% if error %}
+            <h3>{{ error }}</h3>
+        {% endif %}
+        <nav>
+            <div class="profile-form">
+                <form method="POST" action="/Profile">
+                    <label for="username">Username: </label><br>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" required/><br>
 
+                    <label for="email">Email: </label><br>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required/><br>
 
+                    <label for="phone">Phone Number: </label><br>
+                    <input type="text" id="phone" name="phone" value="{{ user.phone }}" required/><br>
+
+                    <input type="submit" value="Update Profile" class="profile-submit-button"/>
+                </form>
+            </div>
+        </nav>
+    </header>
     {% endblock %}
 </body>
 </html>
