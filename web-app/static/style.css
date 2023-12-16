@@ -107,8 +107,8 @@ h1, h2, h3{
     margin-right: 10px;
 }
 .search-button {
-    background-color: #4CAF50;
-    color: white;
+    background-color:#DDEFF5;
+    color:cadetblue;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -153,3 +153,6 @@ h4{
     margin-bottom: 12px;
 }
 
+p{
+    font-size: 26px;
+}

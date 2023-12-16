@@ -9,7 +9,31 @@
 <body>
     {% extends 'base.html' %} {% block Base %}
     <h1>Your Items</h1>
+    {% for item in get_my_item%}
+    <div class="container mt-4">
+        <a href="{{ url_for('YourItemDetail', itemId=item['_id']) }}" style="text-decoration: none; color: inherit;">
+            <div class="card p-3 mb-3 text-center">
+                <img src="{{ url_for('get_image', itemId=item['_id']) }}" alt="{{ item.description }}" class="img-thumbnail mx-auto d-block" style="width: 200px; height: auto;">
+                <h4>Category:{{ item.category }}</h4>
+                <h4>Condition:{{ item.condition }}</h4> 
+                <h4>Price:{{ item.price }}</h4>
+                
+                <div class="Edit_Delete_Buttons">
 
+                    <form action="{{ url_for('DeleteItem', itemId = item['_id']) }}" method="POST">
+                        <button type="submit" class="btn btn-primary" >Delete</button>
+                    </form>
+
+                    <form action="{{ url_for('EditItem', itemId = item['_id']) }}" method="GET">
+                        <button type="submit" class="btn btn-primary" >Edit</button>
+                    </form>
+                </div>
+
+                
+            </div>
+        </a>
+    </div>
+    {% endfor %}
 
     {% endblock %}
 </body>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>item details</title>
+</head>
+<body>
+    {% extends 'base.html' %} {% block Base %}
+    <h1>Item Details</h1>
+    <div class="container mt-4">
+        <div class="card p-3 mb-3 text-center">
+            <img src="{{ url_for('get_image', itemId=get_Individual_item['_id']) }}" alt="{{ get_Individual_item.description }}" class="img-thumbnail mx-auto d-block" style="width: 500px; height: auto;">
+            <h4>Category:{{ get_Individual_item.category }}</h4>
+            <p>Description: {{ get_Individual_item.description }}</p>
+            <h4>Condition:{{ get_Individual_item.condition }}</h4> 
+            <h4>Price:{{ get_Individual_item.price }}</h4>
+
+            <button class="btn btn-primary" onclick="GetContactInfo()">Interested in Trading/Buying</button>
+
+            <!-- Hidden contact information -->
+            <div id="contact-Info" style="display: none; margin-top: 12px;">
+                <h4>Contact Information:</h4>
+                <h5>Email: {{ get_Individual_item.user_email }}</h5>
+                <h5>Phone: {{ get_Individual_item.user_phone }}</h5>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function GetContactInfo() {
+            // Toggle the display of the contact information
+            let contactInfo = document.getElementById('contact-Info');
+            if (contactInfo.style.display === 'none') {
+                contactInfo.style.display = 'block';
+            } else {
+                contactInfo.style.display = 'none';
+            }
+        }
+    </script>
+    {% endblock %}
+</body>
+</html>
