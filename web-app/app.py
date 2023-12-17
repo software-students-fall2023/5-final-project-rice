@@ -123,9 +123,21 @@ def get_image(itemId):
     return 'Image not found', 404
 
 
-@app.route('/SearchForItem')
-def SearchForItem():
-    return render_template('SearchTrade.html')
+#@app.route('/SearchForItem')
+#def SearchForItem():
+#    return render_template('SearchTrade.html', filtered_item_list = [])
+
+@app.route('/SearchForItem', methods = ['GET'])
+def SearchByCategory():
+    items = db['items']
+    filtered_item_list = []
+    category_name = request.args.get('item_category', '')
+    print(category_name)
+    if(category_name):
+        filtered_item_list = list(items.find({'category': {"$regex": category_name,  "$options": "i"}}))
+        #print(filtered_item_list)
+    return render_template('SearchTrade.html', filtered_item_list = filtered_item_list)
+    
 
 @app.route('/', methods=['GET', 'POST'])
 def LoginPage():
