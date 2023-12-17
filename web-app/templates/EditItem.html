@@ -18,9 +18,13 @@
         <div class="card p-3">
             {% for item in get_my_item %}
             <form action="{{ url_for('EditItem', itemId = item['_id']) }}" method="POST" enctype="multipart/form-data">
-                <div class="mb-3">
+                <!-- The previous Image -->
+                <div class="card p-3 mb-3 text-center">
                     <label for="item_image" class="form-label">Item Image:</label>
-                    <input type="file" class="form-control" name="item_image" value="{{ url_for('get_image', itemId=get_Individual_item['_id']) }}" required>
+                    <img src="{{ url_for('get_image', itemId=item['_id']) }}" alt="{{ item.description }}" class="img-thumbnail mx-auto d-block" id = "upload-trigger" style="width: 200px; height: auto; cursor: pointer;">
+                    <input type="file" class="form-control" name="item_image" id = "file-upload" style="display: none;">
+                </div>
+                <div class="mb-3">
                 </div>
 
                 <div class="mb-3 text-center">
@@ -32,7 +36,7 @@
     
                 <div class="mb-3">
                     <label for="description" class="form-label">Description:</label>
-                    <textarea class="form-control" name="description" rows="4" value="{{ item.description }}" required></textarea>
+                    <textarea class="form-control" name="description" rows="4" required>{{item.description}}</textarea>
                 </div>
     
                 <div class="mb-3 text-center">
@@ -41,11 +45,11 @@
                         <!-- Use the select element for the dropdown -->
                         <select class="form-control" name="condition" required>
                             <!-- Add options for different categories -->
-                            <option value="New" {% if item.price == 'New' %} selected {% endif %} >New</option>
-                            <option value="Like-New" {% if item.price == 'Like-New' %} selected {% endif %}>Like New </option>
-                            <option value="Used-Excellent" {% if item.price == 'Used-Excellent' %} selected {% endif %}>Used-Excellent </option>
-                            <option value="Used-Good" {% if item.price == 'Used-Good' %} selected {% endif %}>Used-Good</option>
-                            <option value="Used-Bad" {% if item.price == 'Used-Bad' %} selected {% endif %}>Used-Bad </option>
+                            <option value="New" {% if item.condition == 'New' %} selected {% endif %} >New</option>
+                            <option value="Like-New" {% if item.condition == 'Like-New' %} selected {% endif %}>Like New </option>
+                            <option value="Used-Excellent" {% if item.condition == 'Used-Excellent' %} selected {% endif %}>Used-Excellent </option>
+                            <option value="Used-Good" {% if item.condition == 'Used-Good' %} selected {% endif %}>Used-Good</option>
+                            <option value="Used-Bad" {% if item.condition == 'Used-Bad' %} selected {% endif %}>Used-Bad </option>
                         </select>
                     </div>
                 </div>
@@ -64,6 +68,31 @@
     </div>
 
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("rendered");
+            const uploadTrigger = document.getElementById('upload-trigger');
+            if (uploadTrigger) {
+                uploadTrigger.addEventListener('click', function() {
+                    console.log("clicked");
+                    document.getElementById('file-upload').click();
+                });
+            } else {
+                console.log('Upload trigger element not found');
+            }
+        });
+        document.getElementById('file-upload').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                document.getElementById('upload-trigger').src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
     {% endblock %}
+    
 </body>
 </html>
