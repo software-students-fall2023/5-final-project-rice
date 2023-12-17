@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, redirect, url_for, make_response, session, send_file
+from flask import Flask, render_template, request, redirect, url_for, make_response, session, send_file, jsonify
 import os
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -98,8 +98,11 @@ def DeleteItem(itemId):
     items_collection.delete_one({"_id": ObjectId(itemId)})
     return redirect(url_for('YourTrade'))
 
+
+
 @app.route('/EditItem/<itemId>', methods=['GET'])
 def EditItem(itemId):
+    print("edit")
     items_collection = db['items']
     get_my_item = items_collection.find({"_id": ObjectId(itemId)})
     return render_template('EditItem.html', get_my_item=get_my_item)
@@ -111,13 +114,15 @@ def EditItemSubmission(itemId):
     
     if request.method == 'POST':
         try:
-            itemImage = request.files['item_image']
+            itemImage = None
+            if 'item_image' in request.files and request.files['item_image'].filename != '':
+                itemImage = request.files['item_image']
+                imageData = Binary(itemImage.read())
             category = request.form['category']
             description = request.form['description']
             condition = request.form['condition']
             price = request.form['price']
 
-            imageData = Binary(itemImage.read())
             existing_items = db['items']
 
             item_info = {
@@ -125,11 +130,12 @@ def EditItemSubmission(itemId):
                 "description": description,
                 "condition": condition,
                 "price": price,
-                "image_data": imageData,  # Save the image data as Binary in the database
                 "user": session['username'],  # Include the username of the logged-in user
                 "user_email": session['user_email'],  # Include the email of the logged-in user
                 "user_phone": session['user_phone']  # Include the phone of the logged-in user
             }
+            if(itemImage):
+                item_info["image_data"] = imageData
             
             existing_items.update_one({"_id": ObjectId(itemId)},{"$set": item_info})
             print("item edited successfuly")
