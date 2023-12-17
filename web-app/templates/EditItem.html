@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Edit Item</title>
+</head>
+<body>
+    {% extends 'base.html' %} {% block Base %}
+    <h1>Edit Item</h1>
+
+    {% if error%}
+        <h3>{{error}}</h3>
+    {% endif%}
+
+    <div class="container mt-4">
+        <div class="card p-3">
+            {% for item in get_my_item %}
+            <form action="{{ url_for('EditItem', itemId = item['_id']) }}" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="item_image" class="form-label">Item Image:</label>
+                    <input type="file" class="form-control" name="item_image" value="{{ url_for('get_image', itemId=get_Individual_item['_id']) }}" required>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <label for="category" class="form-label">Category:</label>
+                    <div class="input-group mx-auto" style="max-width: 50%;">
+                        <input type="text" class="form-control" name="category" value="{{ item.category }}" required>
+                    </div>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <textarea class="form-control" name="description" rows="4" value="{{ item.description }}" required></textarea>
+                </div>
+    
+                <div class="mb-3 text-center">
+                    <label for="condition" class="form-label">Condition:</label>
+                    <div class="input-group mx-auto" style="max-width: 25%;">
+                        <!-- Use the select element for the dropdown -->
+                        <select class="form-control" name="condition" required>
+                            <!-- Add options for different categories -->
+                            <option value="New" {% if item.price == 'New' %} selected {% endif %} >New</option>
+                            <option value="Like-New" {% if item.price == 'Like-New' %} selected {% endif %}>Like New </option>
+                            <option value="Used-Excellent" {% if item.price == 'Used-Excellent' %} selected {% endif %}>Used-Excellent </option>
+                            <option value="Used-Good" {% if item.price == 'Used-Good' %} selected {% endif %}>Used-Good</option>
+                            <option value="Used-Bad" {% if item.price == 'Used-Bad' %} selected {% endif %}>Used-Bad </option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="mb-3 text-center">
+                    <label for="price" class="form-label">Price:</label>
+                    <div class="input-group mx-auto" style="max-width: 25%;">
+                        <input type="text" class="form-control" name="price" value="{{ item.price }}" required>
+                    </div>
+                </div>
+    
+                <button type="submit" class="btn btn-primary">Edit Item</button>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    {% endblock %}
+</body>
+</html>

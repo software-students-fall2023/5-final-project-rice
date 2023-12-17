@@ -94,12 +94,51 @@ def YourItemDetail(itemId):
 
 @app.route('/DeleteItem/<itemId>', methods=['POST'])
 def DeleteItem(itemId):
-    return
+    items_collection = db['items']
+    items_collection.delete_one({"_id": ObjectId(itemId)})
+    return redirect(url_for('YourTrade'))
 
 @app.route('/EditItem/<itemId>', methods=['GET'])
 def EditItem(itemId):
-    return
+    items_collection = db['items']
+    get_my_item = items_collection.find({"_id": ObjectId(itemId)})
+    return render_template('EditItem.html', get_my_item=get_my_item)
 
+@app.route('/EditItem/<itemId>', methods=['POST'])
+def EditItemSubmission(itemId):
+    if 'logged_in' not in session or not session['logged_in']:
+        return redirect(url_for('LoginPage'))
+    
+    if request.method == 'POST':
+        try:
+            itemImage = request.files['item_image']
+            category = request.form['category']
+            description = request.form['description']
+            condition = request.form['condition']
+            price = request.form['price']
+
+            imageData = Binary(itemImage.read())
+            existing_items = db['items']
+
+            item_info = {
+                "category": category,
+                "description": description,
+                "condition": condition,
+                "price": price,
+                "image_data": imageData,  # Save the image data as Binary in the database
+                "user": session['username'],  # Include the username of the logged-in user
+                "user_email": session['user_email'],  # Include the email of the logged-in user
+                "user_phone": session['user_phone']  # Include the phone of the logged-in user
+            }
+            
+            existing_items.update_one({"_id": ObjectId(itemId)},{"$set": item_info})
+            print("item edited successfuly")
+            return redirect(url_for('YourTrade'))
+ 
+        except Exception as e:
+            print("unable to add item")
+            error = f"unable to add item: {str(e)}"
+            return render_template('EditItem.html', error=error)
 
 ## Thank you stackOver flow: https://stackoverflow.com/questions/11017466/flask-to-return-image-stored-in-database
 ## way to access image to render for that specific entry
