@@ -8,6 +8,10 @@ flask = "*"
 pymongo = "*"
 bcrypt = "*"
 colorama = "*"
+pytest = "*"
+pytest-cov = "*"
+coverage = "*"
+mongomock = "*"
 
 [dev-packages]
 
