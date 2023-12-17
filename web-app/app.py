@@ -94,11 +94,15 @@ def YourItemDetail(itemId):
 
 @app.route('/DeleteItem/<itemId>', methods=['POST'])
 def DeleteItem(itemId):
-    return
+    items_collection = db['items']
+    items_collection.delete_one({"_id": ObjectId(itemId)})
+    return redirect(url_for('YourTrade.html'))
 
 @app.route('/EditItem/<itemId>', methods=['GET'])
 def EditItem(itemId):
-    return
+    items_collection = db['items']
+    get_my_item = items_collection.find({"_id": ObjectId(itemId)})
+    return render_template('EditItem.heml', get_my_item=get_my_item)
 
 
 ## Thank you stackOver flow: https://stackoverflow.com/questions/11017466/flask-to-return-image-stored-in-database
