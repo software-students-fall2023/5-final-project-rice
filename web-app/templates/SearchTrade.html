@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style.css" />
     <title>Search Item</title>
-    
-</head>
-<body>
+  </head>
+  <body>
     {% extends 'base.html' %} {% block Base %}
-    <h1>Search For Item</h1>
+      <h1>Search For Item</h1>
 
-    <div class="search-container">
-        <form method="get"> 
-            <input type="text" class="search-box" name="cuisine" placeholder="Search for Cuisine" required>
-            <button type="submit" class="search-button">Search</button>
+      <div class="search-container">
+        <form method="get">
+          <input type="text" class="search-box" name="item_category" placeholder="Category" required />
+          <button type="submit" class="search-button">Search</button>
         </form>
-    </div>
+      </div>
 
-
+      {% if filtered_item_list %}
+        {% for item in filtered_item_list %}
+          <div class="container mt-4">
+            <a href="{{ url_for('ViewItemDetail', itemId = item['_id']) }}" style="text-decoration: none; color: inherit;">
+              <div class="card p-3 mb-3 text-center">
+                <img src="{{ url_for('get_image', itemId = item['_id']) }}" alt="{{ item.description }}" class="img-thumbnail mx-auto d-block" style="width: 200px; height: auto;" />
+                <h4>Category:{{ item.category }}</h4>
+                <h4>Condition:{{ item.condition }}</h4>
+                <h4>Price:{{ item.price }}</h4>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+      <div style="display: flex; justify-content: center; align-items: center; height: 100%; text-align: center;">
+        <h2 style="color: red;">No items found.</h2>
+      </div>
+      {% endif %}
     {% endblock %}
-    
-</body>
+  </body>
 </html>
