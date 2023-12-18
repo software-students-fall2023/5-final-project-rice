@@ -17,7 +17,7 @@ def client():
     """
     app.config["TESTING"] = True
     mock_mongo_client = mongomock.MongoClient()
-    with patch('app.mongo_client', return_value=mock_mongo_client):
+    with patch('app.mongo_client', mock_mongo_client):
         with app.test_client() as test_client:
             yield test_client
     #with app.test_client() as test_client:
