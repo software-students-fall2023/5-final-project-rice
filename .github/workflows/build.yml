@@ -41,8 +41,6 @@ jobs:
                 cd rice_trader/5-final-project-rice
                 git pull origin main
             fi
-            git pull origin main
-            cd rice_trader/5-final-project-rice
             docker container prune -f
             docker image prune -f
             docker volume prune -f
