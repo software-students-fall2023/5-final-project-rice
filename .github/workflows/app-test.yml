@@ -1,4 +1,4 @@
-ame: app tests
+name: app tests
 
 run-name: ${{ github.actor }} 
 
