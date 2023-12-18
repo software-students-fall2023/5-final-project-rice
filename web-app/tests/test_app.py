@@ -15,7 +15,6 @@ def client():
     Fixture to configure the app for testing and provide a test client.
     """
     app.config["TESTING"] = True
-    
     with app.test_client() as test_client:
         yield test_client
 

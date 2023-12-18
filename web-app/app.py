@@ -1,6 +1,7 @@
 
 from flask import Flask, render_template, request, redirect, url_for, make_response, session, send_file, jsonify
 import os
+import mongomock
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.binary import Binary
@@ -11,8 +12,14 @@ import bcrypt
 app = Flask('Trader')
 app.secret_key = 'pass'
 
-client = MongoClient("mongodb://localhost:27017/")
-db = client["trade_database"]
+if app.config.get('TESTING'):
+    # Use mongomock for tests
+    mongo_client = mongomock.MongoClient()
+else:
+    # Connect to real MongoDB for production/development
+    mongo_client = MongoClient("mongodb://localhost:27017/")
+    db = mongo_client["trade_database"]
+
 
 @app.route('/Trade')
 def RootPage():
