@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import pytest
+import mongomock
 from flask import Flask
 from bson.objectid import ObjectId
 from app import app, register_user, authenticate_user, logout
@@ -105,7 +106,7 @@ def test_authenticate_user(client):
 
 @pytest.fixture
 def insert_test_item():
-    mongo_client = MongoClient("mongodb://localhost:27017/")
+    mongo_client = mongomock.MongoClient()
     db = mongo_client["trade_database"]
     items_collection = db['items']
 
@@ -158,7 +159,7 @@ def test_DeleteItem(client, insert_test_item):
     response = client.post(f'/DeleteItem/{item_id}')
     assert response.status_code == 302
 
-    mongo_client = MongoClient("mongodb://localhost:27017/")
+    mongo_client = mongomock.MongoClient()
     db = mongo_client["trade_database"]
     items_collection = db['items']
     deleted_item = items_collection.find_one({"_id": ObjectId(item_id)})
