@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import pytest
 import mongomock
+from unittest.mock import patch
 from flask import Flask
 from bson.objectid import ObjectId
 from app import app, register_user, authenticate_user, logout
@@ -15,8 +16,12 @@ def client():
     Fixture to configure the app for testing and provide a test client.
     """
     app.config["TESTING"] = True
-    with app.test_client() as test_client:
-        yield test_client
+    mock_mongo_client = mongomock.MongoClient()
+    with patch('app.mongo_client', return_value=mock_mongo_client):
+        with app.test_client() as test_client:
+            yield test_client
+    #with app.test_client() as test_client:
+        #yield test_client
 
 def test_LoginPage_render(client):
     response = client.get('/')
