@@ -3,9 +3,9 @@ version: "3.11"
 services:
   mongodb:
     image: mongo:latest
-    container_name: mongo2
     volumes:
-      - mongo-data:/data/db
+      - mongo-data:/data/db:rw
+    container_name: mongo2
     ports:
       - "27017:27017"
 
@@ -21,4 +21,4 @@ services:
 
   
 volumes:
-  mongodb-data:
+  mongo-data:
