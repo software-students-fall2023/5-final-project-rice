@@ -34,8 +34,15 @@ jobs:
           script: |
             if [ ! -d "rice_trader" ]; then
                 mkdir rice_trader
+                cd rice_trader
+                git clone https://github.com/software-students-fall2023/5-final-project-rice.git
+                cd 5-final-project-rice
+            else
+                cd rice_trader/5-final-project-rice
+                git pull origin main
             fi
-            cd rice_trader/
+            git pull origin main
+            cd rice_trader/5-final-project-rice
             docker container prune -f
             docker image prune -f
             docker volume prune -f
