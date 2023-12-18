@@ -45,5 +45,6 @@ jobs:
             docker image prune -f
             docker volume prune -f
             docker-compose pull
+            docker-compose build
             docker-compose down
             docker-compose up -d
