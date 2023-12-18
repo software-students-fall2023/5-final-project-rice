@@ -12,10 +12,10 @@
     <div class="container mt-4">
         <div class="card p-3 mb-3 text-center">
             <img src="{{ url_for('get_image', itemId=get_Individual_item['_id']) }}" alt="{{ get_Individual_item.description }}" class="img-thumbnail mx-auto d-block" style="width: 500px; height: auto;">
-            <h4>Category:{{ get_Individual_item.category }}</h4>
+            <h4>Category: {{ get_Individual_item.category }}</h4>
             <p>Description: {{ get_Individual_item.description }}</p>
-            <h4>Condition:{{ get_Individual_item.condition }}</h4> 
-            <h4>Price:{{ get_Individual_item.price }}</h4>
+            <h4>Condition: {{ get_Individual_item.condition }}</h4> 
+            <h4>Price: {{ get_Individual_item.price }}</h4>
 
             <button class="btn btn-primary" onclick="GetContactInfo()">Interested in Trading/Buying</button>
 

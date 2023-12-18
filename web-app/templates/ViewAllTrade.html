@@ -14,9 +14,9 @@
         <a href="{{ url_for('ViewItemDetail', itemId=item['_id']) }}" style="text-decoration: none; color: inherit;">
             <div class="card p-3 mb-3 text-center">
                 <img src="{{ url_for('get_image', itemId=item['_id']) }}" alt="{{ item.description }}" class="img-thumbnail mx-auto d-block" style="width: 200px; height: auto;">
-                <h4>Category:{{ item.category }}</h4>
-                <h4>Condition:{{ item.condition }}</h4> 
-                <h4>Price:{{ item.price }}</h4>
+                <h4>Category: {{ item.category }}</h4>
+                <h4>Condition: {{ item.condition }}</h4> 
+                <h4>Price: {{ item.price }}</h4>
             </div>   
         </a>
             
