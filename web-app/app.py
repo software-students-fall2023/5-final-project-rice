@@ -11,7 +11,7 @@ import bcrypt
 app = Flask('Trader')
 app.secret_key = 'pass'
 
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb://mongo2:27017/")
 db = client["trade_database"]
 
 @app.route('/Trade')
@@ -296,4 +296,4 @@ def UserProfile():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "3000")), debug=True)

@@ -1,0 +1,49 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      
+
+      - name: CICD
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST_RQ}}
+          key: ${{secrets.SSH_KEY_RQ}}
+          username: ${{secrets.SSH_USERNAME_RQ}}
+
+          script: |
+            if [ ! -d "rice_trader" ]; then
+                mkdir rice_trader
+                cd rice_trader
+                git clone https://github.com/software-students-fall2023/5-final-project-rice.git
+                cd 5-final-project-rice
+            else
+                cd rice_trader/5-final-project-rice
+                git pull origin main
+            fi
+            docker container prune -f
+            docker image prune -f
+            docker volume prune -f
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d
