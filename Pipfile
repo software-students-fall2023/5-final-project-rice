@@ -12,6 +12,7 @@ pytest = "*"
 pytest-cov = "*"
 coverage = "*"
 mongomock = "*"
+pytest--cov = "*"
 
 [dev-packages]
 

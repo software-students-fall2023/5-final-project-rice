@@ -1,0 +1,24 @@
+version: "3.11"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongo2
+    ports:
+      - "27017:27017"
+
+  frontend:
+    build: ./web-app # build the Docker image from the Dockerfile in the front-end directory
+    image: kingslayerrq/rice:v1
+    container_name: traderwebappcontainer
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+
+
+  
+
+  
+volumes:
+  mongodb-data:
