@@ -18,7 +18,5 @@ services:
 
 
   
-
-  
 volumes:
   mongodb-data:
