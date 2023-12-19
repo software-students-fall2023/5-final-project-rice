@@ -1,8 +1,9 @@
+from io import BytesIO
 from pymongo import MongoClient
 import pytest
 import mongomock
 from unittest.mock import patch
-from flask import Flask
+from flask import Flask, session
 from bson.objectid import ObjectId
 from app import app, register_user, authenticate_user, logout
 
@@ -20,8 +21,6 @@ def client():
     with patch('app.client', mock_mongo_client):
         with app.test_client() as test_client:
             yield test_client
-     #with app.test_client() as test_client:
-         #yield test_client
 
 def test_LoginPage_render(client):
     response = client.get('/')
@@ -234,3 +233,179 @@ def test_image_upload():
     image_file = open('test_image_file/test_image.jpg', 'rb') 
     response = app_client.post('/AddItem', data={'category': 'Electronics', 'description': 'Smartphone', 'condition': 'New', 'price': '500', 'item_image': (image_file, 'test_image.jpg')})
     assert response.status_code in [200, 302] 
+
+def test_ProfilePage_unauthenticated(client):
+    response = client.get('/Profile')
+    assert response.status_code == 302
+
+def test_LoginPage_redirect_authenticated(client):
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+    response = client.get('/')
+    assert response.status_code == 200
+
+def test_logout_functionality(client):
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+    response = client.post('/logout')
+    assert response.status_code == 302
+    with client.session_transaction() as sess:
+        assert 'logged_in' not in sess
+
+
+def test_AddItem_Redirect_When_Not_Logged_In(client):
+    response = client.post('/AddItem', data={})
+    assert response.status_code == 302
+    assert '/' in response.headers['Location']
+
+
+def test_EditItem_Post_Redirect_When_Not_Logged_In(client):
+    response = client.post('/EditItem/some_item_id', data={})
+    assert response.status_code == 302
+    assert '/' in response.headers['Location']
+
+
+def test_RegisterPage_Existing_User(client):
+    response = client.post('/register', data={'fname': 'existing', 'fpwd': 'user', 'femail': 'email@test.com', 'fnumber': '1234567890'})
+    assert response.status_code == 200
+    assert "Username already exist" in response.data.decode()
+
+
+def test_UserProfile_Post_Redirect_When_Not_Logged_In(client):
+    response = client.post('/Profile', data={})
+    assert response.status_code == 302
+    assert '/' in response.headers['Location']
+
+def test_RootPage_Access_Authenticated(client):
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+    response = client.get('/Trade')
+    assert response.status_code == 200
+
+
+def test_Logout_And_Redirect(client):
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+    response = client.post('/logout', follow_redirects=True)
+    assert response.status_code == 200
+
+    with client.session_transaction() as sess:
+        assert sess.get('logged_in') is None
+        assert 'username' not in sess
+
+
+def test_RegisterPage_New_User(client, monkeypatch):
+    monkeypatch.setattr('app.register_user', lambda x, y, z, w: True)
+    response = client.post('/register', data={'fname': 'uniqueuser', 'fpwd': 'newpass', 'femail': 'newemail@test.com', 'fnumber': '1234567890'})
+    assert response.status_code == 302  
+
+def test_AddItem_authenticated(client, monkeypatch):
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+    
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+
+    image_file = open('test_image_file/test_image.jpg', 'rb')  # Replace with your image file path
+    response = client.post('/AddItem', data={
+        'category': 'Electronics',
+        'description': 'Brand new smartphone',
+        'condition': 'New',
+        'price': '500',
+        'item_image': (image_file, 'test_image.jpg')
+    })
+
+    assert response.status_code in [200, 302]
+
+
+def test_ViewAllTrade_authenticated(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+
+    response = client.get('/ViewAllTrade')
+    assert response.status_code == 200
+
+def test_ViewItemDetail(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    item_id = str(ObjectId())
+    response = client.get(f'/ViewItemDetail/{item_id}')
+    assert response.status_code == 200
+
+def test_YourTrade_authenticated(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+
+    response = client.get('/YourTrade')
+    assert response.status_code == 200
+
+def test_YourItemDetail(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    item_id = str(ObjectId())
+    response = client.get(f'/YourItemDetail/{item_id}')
+    assert response.status_code == 200
+
+def test_DeleteItem_authenticated(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    item_id = str(ObjectId())
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+
+    response = client.post(f'/DeleteItem/{item_id}')
+    assert response.status_code == 302
+
+def test_EditItem_get(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    item_id = str(ObjectId())
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+
+    response = client.get(f'/EditItem/{item_id}')
+    assert response.status_code == 200
+
+def test_EditItem_post(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    item_id = str(ObjectId())
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+
+    updated_item_data = {
+        'category': 'Updated Category',
+        'description': 'Updated Description',
+        'condition': 'Updated Condition',
+        'price': 'Updated Price',
+    }
+    response = client.post(f'/EditItem/{item_id}', data=updated_item_data)
+    assert response.status_code in [200, 302]
+
+def test_EditItemSubmission_authenticated(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    item_id = str(ObjectId())
+    with client.session_transaction() as sess:
+        sess['logged_in'] = True
+        sess['username'] = 'testuser'
+
+    updated_item_data = {
+        'category': 'Updated Category',
+        'description': 'Updated Description',
+        'condition': 'Updated Condition',
+        'price': 'Updated Price',
+    }
+    response = client.post(f'/EditItem/{item_id}', data=updated_item_data)
+    assert response.status_code in [200, 302]
+
+def test_get_image(client, monkeypatch):
+    monkeypatch.setattr('app.db', mongomock.MongoClient().trade_database)
+    item_id = str(ObjectId())
+    response = client.get(f'/images/{item_id}')
+    assert response.status_code == 404
