@@ -1,5 +1,7 @@
 # Final Project
 ![Continuous Deploymeny](https://github.com/software-students-fall2023/5-final-project-rice/actions/workflows/build.yml/badge.svg)
+[![app tests](https://github.com/software-students-fall2023/5-final-project-rice/actions/workflows/app-test.yml/badge.svg)](https://github.com/software-students-fall2023/5-final-project-rice/actions/workflows/app-test.yml)
+
 An exercise to put to practice software development teamwork, subsystem communication, containers, deployment, and CI/CD pipelines. See [instructions](./instructions.md) for details.
 
 ## What is our WebApp?
