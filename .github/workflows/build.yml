@@ -72,6 +72,7 @@ jobs:
             else
                 cd rice_trader/5-final-project-rice
                 git pull origin main
+                echo "pulled"
             fi
             docker container prune -f
             docker image prune -f
