@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Add Item</title>
+</head>
+<body>
+    {% extends 'base.html' %} {% block Base %}
+    <h1>Add Item</h1>
+
+    {% if error%}
+        <h3>{{error}}</h3>
+    {% endif%}
+
+    <div class="container mt-4">
+        <div class="card p-3">
+
+            <form action="/AddItem" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="item_image" class="form-label">Item Image:</label>
+                    <input type="file" class="form-control" name="item_image" required>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <label for="category" class="form-label">Category:</label>
+                    <div class="input-group mx-auto" style="max-width: 50%;">
+                        <input type="text" class="form-control" name="category" required>
+                    </div>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <textarea class="form-control" name="description" rows="4" required></textarea>
+                </div>
+    
+                <div class="mb-3 text-center">
+                    <label for="condition" class="form-label">Condition:</label>
+                    <div class="input-group mx-auto" style="max-width: 25%;">
+                        <!-- Use the select element for the dropdown -->
+                        <select class="form-control" name="condition" required>
+                            <!-- Add options for different categories -->
+                            <option value="New">New</option>
+                            <option value="Like-New">Like New </option>
+                            <option value="Used-Excellent">Used-Excellent </option>
+                            <option value="Used-Good">Used-Good</option>
+                            <option value="Used-Bad">Used-Bad </option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="mb-3 text-center">
+                    <label for="price" class="form-label">Price:</label>
+                    <div class="input-group mx-auto" style="max-width: 25%;">
+                        <input type="text" class="form-control" name="price" required>
+                    </div>
+                </div>
+    
+                <button type="submit" class="btn btn-primary">Add Item</button>
+            </form>
+        </div>
+    </div>
+
+
+    {% endblock %}
+</body>
+</html>

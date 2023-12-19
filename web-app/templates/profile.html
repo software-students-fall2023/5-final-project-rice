@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        label {
+        font-size: 22px; /* Adjust this value based on your preference */
+        }
+
+        header {
+            text-align: center;
+        }
+
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .profile-form input[type="text"],
+        .profile-form input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+        }
+
+        .profile-form input[type="submit"] {
+            width: 40%;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #c4b0f1;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+        }
+
+        .profile-form input[type="submit"]:hover {
+            background-color: #ba98ed;
+        }
+
+        nav {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% extends 'base.html' %} 
+    {% block Base %}
+    <header>
+        <h1>User Profile</h1>
+        {% if error %}
+            <h3>{{ error }}</h3>
+        {% endif %}
+        <nav>
+            <div class="profile-form">
+                <form method="POST" action="/Profile">
+                    <label for="username">Username: </label><br>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" required/><br>
+
+                    <label for="email">Email: </label><br>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required/><br>
+
+                    <label for="phone">Phone Number: </label><br>
+                    <input type="text" id="phone" name="phone" value="{{ user.phone }}" required/><br>
+
+                    <input type="submit" value="Update" class="profile-submit-button"/>
+                </form>
+            </div>
+        </nav>
+        <p>Please note that if you edit your email and phone number these changes will unfortunatley not be displayed on items you have previously posted</p>
+    </header>
+    {% endblock %}
+</body>
+</html>

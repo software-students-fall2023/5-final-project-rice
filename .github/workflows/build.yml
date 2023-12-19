@@ -1,0 +1,83 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      
+    
+      - name: Build and Push Docker image
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        run: |
+          echo $DOCKER_HUB_ACCESS_TOKEN | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA -f web-app/Dockerfile .
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA -f database/Dockerfile .
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:latest
+
+      - name: Cleanup Old Images
+        run: |
+          OLD_IMAGES=$(docker images -q -f "before=${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA" -f "label=project=rice")
+          OLD_DB_IMAGES=$(docker images -q -f "before=${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA" -f "label=project=rice_db")
+          if [ -n "$OLD_IMAGES" ]; then
+            docker rmi $OLD_IMAGES
+          else
+            echo "No old images to remove."
+          fi
+          if [ -n "$OLD_DB_IMAGES" ]; then
+            docker rmi $OLD_DB_IMAGES
+          else
+            echo "No old db images to remove."
+          fi
+
+        
+
+      - name: CICD
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST_RQ}}
+          key: ${{secrets.SSH_KEY_RQ}}
+          username: ${{secrets.SSH_USERNAME_RQ}}
+
+          script: |
+            if [ ! -d "rice_trader" ]; then
+                mkdir rice_trader
+                cd rice_trader
+                git clone https://github.com/software-students-fall2023/5-final-project-rice.git
+                cd 5-final-project-rice
+            else
+                cd rice_trader/5-final-project-rice
+                git pull origin main
+                echo "pulled"
+            fi
+            docker container prune -f
+            docker image prune -f
+            docker-compose pull
+            docker-compose build
+            docker-compose down
+            docker-compose up -d
+            

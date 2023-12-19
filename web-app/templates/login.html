@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deppops</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .login-submit-button {
+            padding: 10px 15px;
+            background-color: #dcb6f6;
+            color: white;
+            border: none;
+            border-radius: 20px; /* Rounded edges */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-submit-button:hover {
+            background-color: #b37af5; /* Light purple on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Deppops</h1>
+        <h1>Login</h1>
+        {% if error %}
+            <h3>{{ error }}</h3>
+        {% endif %}
+        <nav>
+            <div class="login-form">
+                <form method="POST" action="/">
+                    <label for="fname"> Username: </label><br>
+                    <input type="text" id="fname" name="fname" class="login-input" required/><br>
+                    <label for="fpwd"> Password: </label><br>
+                    <input type="text" name="fpwd" class="password-input" required/><br>
+                    <input type="submit" value="Login" class="login-submit-button"/>
+                </form>
+                <a href="/register">Don't have an account? Register here.</a>
+            </div>
+        </nav>
+    </header>
+
+    <footer>
+        <p>&copy; 2023 Trader</p>
+    </footer>
+</body>
+</html>

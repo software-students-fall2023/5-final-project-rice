@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .register-submit-button {
+            padding: 20px 25px;
+            background-color: #dcb6f6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-submit-button:hover {
+            background-color: #b37af5; 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Trader</h1>
+        <h1>Register</h1>
+        {% if error%}
+            <h3>{{error}}</h3>
+        {% endif%}
+        <nav>
+            <div class="login-form">
+                <form method="POST" action="/register">
+                    <label for="femail">Email: </label><br>
+                    <input type="text" id = "femail" name="femail" class="email-input" required/><br>
+                    <label for="fname"> Username: </label><br>
+                    <input type="text" id = "fname" name="fname" class="login-input" required/><br>
+                    <label for="fpwd"> Password: </label><br>
+                    <input type="text" name="fpwd" class="password-input" required/><br>
+                    <label for="fnumber"> Phone Number: </label><br>
+                    <input type="text" name="fnumber" class="phone-input" required/><br>
+                    <input type="submit" value = Register class="register-submit-button"/>
+                    
+                </form>
+                    <a href="/">have an account? Log in here here.</a>
+                
+            </div>
+        </nav>
+    </header>
+
+    <footer>
+        <p>&copy; 2023 Trader</p>
+    </footer>
+</body>
+</html>

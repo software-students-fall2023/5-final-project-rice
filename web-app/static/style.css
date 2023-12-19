@@ -1,0 +1,164 @@
+@font-face {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/robotomono/v22/L0xuDF4xlVMF-BfR8bXMIhJHg45mwgGEFl0_gPq_ROW4AJi8SJQt.woff2) format('woff2');
+}
+
+body {
+    background-color: #f3ccff;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    font-family: 'Roboto Mono', monospace;
+}
+.header {
+    background-color: hsl(0, 0%, 100%);
+    max-width: 600px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-content: space-evenly
+    
+}
+
+.container {
+    background-color: #ffffff;
+    max-width: 1200px;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 50px auto;
+    text-align: center;
+    }
+form {
+    padding-left: 60px;
+    padding-right: 60px;
+}
+.about {
+    background-color: #ffffff;
+    max-width: 800px;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 10px auto;
+}
+
+
+
+.add-food-form{
+    display: block;
+    text-align: center;
+    font-size: 1.2em;
+    font-family: 'Roboto Mono', monospace;
+    align-items: center;
+}
+
+h1, h2, h3{
+    text-align: center;
+}
+
+.login-form{
+    display: block;
+    text-align: center;
+    font-size: 2em; 
+    font-family: 'Roboto Mono', monospace;
+    
+    
+}
+
+.login-input, .password-input, .phone-input, .email-input {
+    width: 350px;
+    height: 50px;
+    border-radius: 12px; /* Adjust the border-radius to make it more rounded */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 25px; 
+}
+
+.login-submit-button{
+    width: 150px;
+    height: 40px;
+    background-color:#FAF9F6;
+    color:black;
+    padding: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+.search-box {
+    padding: 10px;
+    border-radius: 6px;
+    width: 250px;
+    margin-right: 10px;
+}
+.search-button {
+    background-color:#DDEFF5;
+    color:cadetblue;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.BaseNav{
+    background-color: #4CAF50;
+    color:black;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    
+}
+
+a {
+    text-decoration: none; 
+    color: inherit; 
+}
+
+.food-trucks-container{
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 10px;
+}
+
+.food-truck-divs{
+    border: 1px solid black;
+    border-radius: 13px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.Edit_Delete_Buttons form {
+    display: inline-block;
+    margin-right: 10px; 
+}
+
+h4{
+    margin-bottom: 12px;
+}
+
+p{
+    font-size: 26px;
+}
+
+.container .target:hover {
+    background-color:thistle; /* Change the background color on hover */
+    cursor: pointer; /* Change the cursor to a pointer on hover */
+  }
