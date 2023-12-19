@@ -270,7 +270,7 @@ def test_EditItem_Post_Redirect_When_Not_Logged_In(client):
 def test_RegisterPage_Existing_User(client):
     response = client.post('/register', data={'fname': 'existing', 'fpwd': 'user', 'femail': 'email@test.com', 'fnumber': '1234567890'})
     assert response.status_code == 200
-    assert "Username already exist" in response.data.decode()
+    assert "Username, phone number, or password already exist please create a new one" in response.data.decode()
 
 
 def test_UserProfile_Post_Redirect_When_Not_Logged_In(client):
