@@ -34,7 +34,7 @@ jobs:
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA -f databse/Dockerfile .
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA -f database/Dockerfile .
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:latest
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:latest
