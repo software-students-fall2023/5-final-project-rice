@@ -4,9 +4,9 @@
 
 An exercise to put to practice software development teamwork, subsystem communication, containers, deployment, and CI/CD pipelines. See [instructions](./instructions.md) for details.
 
-## What is our WebApp?
+## What is Deppops?
 
-Our WebApp is designed to serve as a medium between people who are interested in trading personal belongings, including clothing, accessories, and other items. Users will be able to post items for others to see and potentially request trades, as well as browse and search for items they would like to trade for. In our app, we have a front end webapp for users that accesses a database through docker containers.
+Deppops is designed to serve as a medium between people who are interested in trading personal belongings, including clothing, accessories, and other items. Users will be able to post items for others to see and potentially request trades, as well as browse and search for items they would like to trade for. In our app, we have a front end webapp for users that accesses a database through docker containers.
 
 ## Installation and Usage
 
@@ -22,6 +22,28 @@ Our WebApp is designed to serve as a medium between people who are interested in
 git clone https://github.com/software-students-fall2023/5-final-project-rice.git
 ```
 
+2. Open Docker Desktop or a new terminal 
+
+3. In your command prompt/terminal, access the directory where you cloned the repository:
+```
+cd "path_to_directory"
+```
+
+4. From here, run the commands:
+```
+docker-compose build
+docker-compose up
+```
+5. Now, access the http://127.0.0.1:3000/ in your browser of choice.
+
+6. to end the session 
+```
+docker-compose stop
+```
+or 
+```
+docker-compose down
+```
 
 ### Website Access Option
 
