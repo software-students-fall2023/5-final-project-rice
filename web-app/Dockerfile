@@ -2,7 +2,7 @@ FROM python:3.11
 
 WORKDIR /web-app
 
-COPY requirements.txt ./
+COPY web-app/requirements.txt ./
 
 
 RUN pip install --no-cache-dir -r requirements.txt

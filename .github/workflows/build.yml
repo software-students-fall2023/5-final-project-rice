@@ -23,6 +23,28 @@ jobs:
           python-version: ${{ matrix.python-version }}
       
       
+    
+      - name: Build and Push Docker image
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        run: |
+          echo $DOCKER_HUB_ACCESS_TOKEN | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA -f web-app/Dockerfile .
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
+
+      - name: Cleanup Old Images
+        run: |
+          OLD_IMAGES=$(docker images -q -f "before=${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA" -f "label=project=rice")
+          if [ -n "$OLD_IMAGES" ]; then
+            docker rmi $OLD_IMAGES
+          else
+            echo "No old images to remove."
+          fi
+
+        
 
       - name: CICD
         uses: appleboy/ssh-action@v0.1.2
