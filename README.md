@@ -49,6 +49,10 @@ docker-compose down
 
 With deployment to Digital Ocean, you can access our webapp directly by typing in your url: http://159.203.78.56:3000/
 
+### DockerHub
+
+DockerHub for Continuous Deployment: [rice_db](https://hub.docker.com/r/kingslayerrq/rice_db)
+
 ## Contributors
 
 - [Andrew Huang](https://github.com/andrew0022)
