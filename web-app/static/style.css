@@ -157,3 +157,8 @@ h4{
 p{
     font-size: 26px;
 }
+
+.container .target:hover {
+    background-color:thistle; /* Change the background color on hover */
+    cursor: pointer; /* Change the cursor to a pointer on hover */
+  }

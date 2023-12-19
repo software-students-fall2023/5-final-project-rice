@@ -51,7 +51,7 @@ def AddItem():
             
             items.insert_one(item_info)
             print("item added successfuly")
-            return redirect(url_for('ViewAllTrade'))
+            return redirect(url_for('YourTrade'))
  
         except Exception as e:
             print("unable to add item")
@@ -229,7 +229,7 @@ def RegisterPage():
         else:
             # Registration failed, print an error message
             print(f"Failed to register user '{name}'.")
-            error = 'Username already exist please create a new one'
+            error = 'Username, phone number, or password already exist please create a new one'
             return render_template('register.html', error=error)
         
 
