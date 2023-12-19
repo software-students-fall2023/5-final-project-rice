@@ -6,7 +6,7 @@ An exercise to put to practice software development teamwork, subsystem communic
 
 ## What is Deppops?
 
-Deppops is designed to serve as a medium between people who are interested in trading personal belongings, including clothing, accessories, and other items. Users will be able to post items for others to see and potentially request trades, as well as browse and search for items they would like to trade for. In our app, we have a front end webapp for users that accesses a database through docker containers.(note please do not upload images larger than 16mb as that size is not supported)
+Deppops is designed to serve as a medium between people who are interested in trading personal belongings, including clothing, accessories, and other items. Users will be able to post items for others to see and potentially request trades, as well as browse and search for items they would like to trade for. In our app, we have a front end webapp for users that accesses a database through docker containers.(note please do not upload images larger than 16mb as that size is not supported).
 
 ## Installation and Usage
 
@@ -51,7 +51,7 @@ With deployment to Digital Ocean, you can access our webapp directly by typing i
 
 ### DockerHub
 
-DockerHub for Continuous Deployment: [rice_db](https://hub.docker.com/r/kingslayerrq/rice_db)
+DockerHub for Continuous Deployment: [rice_db](https://hub.docker.com/r/kingslayerrq/rice_db)[web_app](https://hub.docker.com/r/kingslayerrq/rice)
 
 ## Contributors
 
