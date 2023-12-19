@@ -30,14 +30,14 @@ jobs:
           DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
         run: |
           echo $DOCKER_HUB_ACCESS_TOKEN | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-          docker build -t kingslayerrq/rice:$GITHUB_SHA -f web-app/Dockerfile .
-          docker tag kingslayerrq/rice:$GITHUB_SHA kingslayerrq/rice:latest
-          docker push kingslayerrq/rice:$GITHUB_SHA
-          docker push kingslayerrq/rice:latest
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA -f web-app/Dockerfile .
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
 
       - name: Cleanup Old Images
         run: |
-          OLD_IMAGES=$(docker images -q -f "before=***/rice:$GITHUB_SHA" -f "label=project=rice")
+          OLD_IMAGES=$(docker images -q -f "before=${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA" -f "label=project=rice")
           if [ -n "$OLD_IMAGES" ]; then
             docker rmi $OLD_IMAGES
           else
