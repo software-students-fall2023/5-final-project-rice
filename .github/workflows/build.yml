@@ -34,14 +34,24 @@ jobs:
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice:latest
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA -f databse/Dockerfile .
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:latest
 
       - name: Cleanup Old Images
         run: |
           OLD_IMAGES=$(docker images -q -f "before=${{ secrets.DOCKER_HUB_USERNAME }}/rice:$GITHUB_SHA" -f "label=project=rice")
+          OLD_DB_IMAGES=$(docker images -q -f "before=${{ secrets.DOCKER_HUB_USERNAME }}/rice_db:$GITHUB_SHA" -f "label=project=rice_db")
           if [ -n "$OLD_IMAGES" ]; then
             docker rmi $OLD_IMAGES
           else
             echo "No old images to remove."
+          fi
+          if [ -n "$OLD_DB_IMAGES" ]; then
+            docker rmi $OLD_DB_IMAGES
+          else
+            echo "No old db images to remove."
           fi
 
         
