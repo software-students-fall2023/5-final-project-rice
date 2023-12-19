@@ -51,7 +51,7 @@ With deployment to Digital Ocean, you can access our webapp directly by typing i
 
 ### DockerHub
 
-DockerHub for Continuous Deployment: [rice_db](https://hub.docker.com/r/kingslayerrq/rice_db)
+DockerHub for Continuous Deployment: [rice_db](https://hub.docker.com/r/kingslayerrq/rice_db)[web_app](https://hub.docker.com/r/kingslayerrq/rice)
 
 ## Contributors
 
