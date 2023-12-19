@@ -22,16 +22,24 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      
     
       - name: Build and Push Docker image
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
         run: |
-          docker build -t kingslayerrq/rice .
-          docker push kingslayerrq/rice
+          echo $DOCKER_HUB_ACCESS_TOKEN | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+          docker build -t kingslayerrq/rice:$GITHUB_SHA -f web-app/Dockerfile .
+          docker tag kingslayerrq/rice:$GITHUB_SHA kingslayerrq/rice:latest
+          docker push kingslayerrq/rice:$GITHUB_SHA
+          docker push kingslayerrq/rice:latest
+          
+      - name: Cleanup Old Images
+        run: |
+          docker rmi $(docker images -q -f "before=kingslayerrq/rice:$GITHUB_SHA" -f "label=project=rice")
+        
+        
 
       - name: CICD
         uses: appleboy/ssh-action@v0.1.2
